@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
 import { signUp } from '../utils/auth';
-import { ErrorMessage } from '../components/States';
+import { ErrorMessage, SuccessMessage } from '../components/States';
 
 export default function SignupPage() {
   const navigate = useNavigate();
@@ -13,6 +13,7 @@ export default function SignupPage() {
     role: 'client' as 'client' | 'professional',
   });
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -52,6 +53,7 @@ export default function SignupPage() {
       }
 
       console.log('Signup successful, redirecting...');
+      setSuccess('Account created successfully! Redirecting...');
       // Redirect based on role after a short delay
       setTimeout(() => {
         if (formData.role === 'professional') {
@@ -76,6 +78,8 @@ export default function SignupPage() {
         </p>
 
         {error && <ErrorMessage error={error} />}
+
+        {success && <SuccessMessage message={success} />}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>

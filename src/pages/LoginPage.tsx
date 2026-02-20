@@ -2,14 +2,18 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
 import { signIn } from '../utils/auth';
-import { ErrorMessage } from '../components/States';
+import { ErrorMessage, SuccessMessage } from '../components/States';
+import { supabase } from '../utils/supabase';
+import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,6 +38,7 @@ export default function LoginPage() {
       }
 
       console.log('Login successful');
+      setSuccess('Login successful! Redirecting to dashboard...');
       // Give it a moment for session to persist
       setTimeout(() => {
         navigate('/dashboard', { replace: true });
@@ -43,6 +48,16 @@ export default function LoginPage() {
       setError(err instanceof Error ? err.message : 'Login failed. Please try again.');
       setLoading(false);
     }
+  };
+
+  const handleGoogleLogin = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/dashboard`
+      }
+    });
+    if (error) setError(error.message);
   };
 
   return (
@@ -55,10 +70,12 @@ export default function LoginPage() {
 
         {error && <ErrorMessage error={error} />}
 
+        {success && <SuccessMessage message={success} />}
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-charcoal mb-2">
-              Email
+              <Mail className="w-4 h-4 inline mr-2" /> Email
             </label>
             <input
               type="email"
@@ -73,17 +90,26 @@ export default function LoginPage() {
 
           <div>
             <label className="block text-sm font-medium text-charcoal mb-2">
-              Password
+              <Lock className="w-4 h-4 inline mr-2" /> Password
             </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              className="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-electric-blue focus:border-transparent transition-all"
-              required
-              disabled={loading}
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                className="w-full px-5 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-electric-blue focus:border-transparent transition-all"
+                required
+                disabled={loading}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-3 text-gray-500 hover:text-gray-700"
+              >
+                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              </button>
+            </div>
           </div>
 
           <Button
@@ -109,8 +135,8 @@ export default function LoginPage() {
             Or sign in as
           </p>
           <div className="flex gap-4">
-            <button className="flex-1 px-4 py-2 border border-border-color rounded-button hover:bg-secondary transition-colors">
-              Google
+            <button onClick={handleGoogleLogin} className="flex-1 px-4 py-2 border border-border-color rounded-button hover:bg-secondary transition-colors">
+              Continue with Google
             </button>
             <button className="flex-1 px-4 py-2 border border-border-color rounded-button hover:bg-secondary transition-colors">
               Phone

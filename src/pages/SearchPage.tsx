@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import ProfessionalCard from '../components/ProfessionalCard';
 import Button from '../components/Button';
-import { CATEGORIES, LOCATIONS, CATEGORY_LIST, LOCATION_LIST } from '../constants';
+import { LOCATIONS, LOCATION_LIST } from '../constants';
 import type { ProfessionalCard as ProfessionalCardType } from '../types';
 
 // Mock data - replace with Supabase queries
@@ -130,11 +130,11 @@ export default function SearchPage() {
                   className="w-full px-4 py-2 border border-border-color rounded-button focus:outline-none focus:ring-2 focus:ring-electric-blue"
                 >
                   <option value="">All Categories</option>
-                  {CATEGORY_LIST.map((cat) => (
-                    <option key={cat} value={cat}>
-                      {CATEGORIES[cat]}
-                    </option>
-                  ))}
+                  <option value="beautician">Beautician</option>
+                  <option value="writer">Writer & Content Creator</option>
+                  <option value="plumber">Plumber</option>
+                  <option value="electrician">Electrician</option>
+                  <option value="tailor">Tailor / Fashion Designer</option>
                 </select>
               </div>
 

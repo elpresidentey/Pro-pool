@@ -22,6 +22,15 @@ export default function Hero() {
     'All Services',
   ];
 
+  const categoryMap = {
+    'Beauty': 'beautician',
+    'Plumbing': 'plumber',
+    'Writing': 'writer',
+    'Electrical': 'electrician',
+    'Tailoring': 'tailor',
+    'All Services': '',
+  };
+
   const stats = [
     { number: '500+', label: 'Active Professionals' },
     { number: '5000+', label: 'Happy Clients' },
@@ -95,7 +104,7 @@ export default function Hero() {
             {categories.map((category, idx) => (
               <button
                 key={idx}
-                onClick={() => navigate(`/search?category=${category}`)}
+                onClick={() => navigate(`/search?category=${categoryMap[category as keyof typeof categoryMap] || ''}`)}
                 className="px-6 py-4 border border-gray-200 rounded-lg text-charcoal font-medium hover:border-electric-blue hover:bg-blue-50 transition-all duration-300 text-center animate-stagger-fade-in transform hover:scale-105 hover:shadow-md"
                 style={{
                   animationDelay: `${idx * 50}ms`,

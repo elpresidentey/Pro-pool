@@ -7,6 +7,7 @@ import ImageUpload from '../components/ImageUpload';
 import Button from '../components/Button';
 import { CATEGORIES, LOCATIONS } from '../constants';
 import { ErrorMessage, LoadingScreen, SuccessMessage } from '../components/States';
+import { User, Briefcase, MapPin, Phone, MessageSquare, FileText } from 'lucide-react';
 
 export default function ProfileSetupPage() {
   const navigate = useNavigate();
@@ -200,7 +201,7 @@ export default function ProfileSetupPage() {
             {/* Name */}
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                Full Name *
+                <User className="w-4 h-4 inline mr-2" /> Full Name *
               </label>
               <input
                 type="text"
@@ -217,7 +218,7 @@ export default function ProfileSetupPage() {
             {/* Category */}
             <div>
               <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-2">
-                Professional Category *
+                <Briefcase className="w-4 h-4 inline mr-2" /> Professional Category *
               </label>
               <select
                 id="category"
@@ -237,7 +238,7 @@ export default function ProfileSetupPage() {
             {/* Location */}
             <div>
               <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">
-                Location *
+                <MapPin className="w-4 h-4 inline mr-2" /> Location *
               </label>
               <select
                 id="location"
@@ -257,7 +258,7 @@ export default function ProfileSetupPage() {
             {/* Phone */}
             <div>
               <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                Phone Number *
+                <Phone className="w-4 h-4 inline mr-2" /> Phone Number *
               </label>
               <input
                 type="tel"
@@ -275,7 +276,7 @@ export default function ProfileSetupPage() {
             {/* WhatsApp */}
             <div>
               <label htmlFor="whatsapp" className="block text-sm font-medium text-gray-700 mb-2">
-                WhatsApp Number *
+                <MessageSquare className="w-4 h-4 inline mr-2" /> WhatsApp Number *
               </label>
               <input
                 type="tel"
@@ -292,7 +293,7 @@ export default function ProfileSetupPage() {
             {/* Bio */}
             <div>
               <label htmlFor="bio" className="block text-sm font-medium text-gray-700 mb-2">
-                Professional Bio *
+                <FileText className="w-4 h-4 inline mr-2" /> Professional Bio *
               </label>
               <textarea
                 id="bio"
