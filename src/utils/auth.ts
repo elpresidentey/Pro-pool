@@ -110,8 +110,34 @@ export const signUp = async (email: string, password: string, role: 'professiona
 
     if (error) throw error;
 
-    // Wait for session to be established
-    await new Promise(resolve => setTimeout(resolve, 200));
+    // If signup succeeded but user needs email confirmation,
+    // we'll wait a moment for them to be authenticated
+    if (data.user?.id) {
+      // Wait for auth session to be established
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Try to create user record
+      try {
+        const { error: insertError } = await supabase
+          .from('users')
+          .insert({
+            id: data.user.id,
+            email: trimmedEmail,
+            role,
+          })
+          .select()
+          .single();
+
+        if (insertError) {
+          // Log but don't throw - user signup succeeded in auth
+          console.warn('User record creation warning:', insertError.message);
+          // This is OK - trigger or next login will create it
+        }
+      } catch (err) {
+        console.warn('User record creation error:', err);
+        // Continue anyway - auth user was created successfully
+      }
+    }
 
     return { success: true, data, message: 'Signup successful! Please check your email to confirm.' };
   } catch (error) {

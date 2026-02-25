@@ -50,8 +50,9 @@ export default class ErrorBoundary extends Component<Props, State> {
               </details>
             )}
             <div className="flex gap-4 mt-6 justify-center">
-              <Button onClick={this.handleReset}>Try Again</Button>
+              <Button size="md" onClick={this.handleReset}>Try Again</Button>
               <Button
+                size="md"
                 variant="secondary"
                 onClick={() => (window.location.href = '/')}
               >

@@ -81,3 +81,85 @@ export const formatPhoneNumber = (phone: string): string => {
   }
   return '+234' + cleaned;
 };
+
+// Login form validation
+export const validateLoginForm = (email: string, password: string): { [key: string]: string } => {
+  const errors: { [key: string]: string } = {};
+
+  if (!email.trim()) {
+    errors.email = 'Email is required';
+  } else if (!validateEmail(email)) {
+    errors.email = 'Please enter a valid email address';
+  }
+
+  if (!password) {
+    errors.password = 'Password is required';
+  } else if (password.length < 6) {
+    errors.password = 'Password must be at least 6 characters';
+  }
+
+  return errors;
+};
+
+// Signup form validation
+export const validateSignupForm = (
+  name: string,
+  email: string,
+  password: string,
+  confirmPassword: string
+): { [key: string]: string } => {
+  const errors: { [key: string]: string } = {};
+
+  if (!name.trim()) {
+    errors.name = 'Full name is required';
+  } else if (name.trim().length < 2) {
+    errors.name = 'Name must be at least 2 characters';
+  }
+
+  if (!email.trim()) {
+    errors.email = 'Email is required';
+  } else if (!validateEmail(email)) {
+    errors.email = 'Please enter a valid email address';
+  }
+
+  if (!password) {
+    errors.password = 'Password is required';
+  } else if (password.length < 6) {
+    errors.password = 'Password must be at least 6 characters';
+  }
+
+  if (password !== confirmPassword) {
+    errors.confirmPassword = 'Passwords do not match';
+  }
+
+  return errors;
+};
+
+// Review validation
+export const validateReview = (
+  userName: string,
+  comment: string,
+  rating: number
+): { [key: string]: string } => {
+  const errors: { [key: string]: string } = {};
+
+  if (!userName.trim()) {
+    errors.userName = 'Your name is required';
+  } else if (userName.trim().length < 2) {
+    errors.userName = 'Name must be at least 2 characters';
+  }
+
+  if (!comment.trim()) {
+    errors.comment = 'Review comment is required';
+  } else if (comment.trim().length < 10) {
+    errors.comment = 'Review must be at least 10 characters';
+  } else if (comment.length > 500) {
+    errors.comment = 'Review must not exceed 500 characters';
+  }
+
+  if (rating < 1 || rating > 5) {
+    errors.rating = 'Rating must be between 1 and 5 stars';
+  }
+
+  return errors;
+};

@@ -1,5 +1,3 @@
-const fetch = require('node-fetch');
-
 // You need to get these from your Supabase dashboard
 const PROJECT_ID = 'irfptgmnhcormzjhmzuh';
 const PROJECT_URL = 'https://irfptgmnhcormzjhmzuh.supabase.co';
@@ -17,7 +15,8 @@ async function createBucket(bucketName) {
   try {
     console.log(`\n📦 Creating bucket: ${bucketName}...`);
     
-    const response = await fetch(`${PROJECT_URL}/storage/v1/b`, {
+    const url = `${PROJECT_URL}/storage/v1/b`;
+    const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${SERVICE_ROLE_KEY}`,

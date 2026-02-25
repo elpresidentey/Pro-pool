@@ -1,102 +1,37 @@
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Hero from '../components/Hero';
 import Button from '../components/Button';
 import ProfessionalCard from '../components/ProfessionalCard';
-import { CATEGORIES, CATEGORY_LIST } from '../constants';
-
-// Mock data - replace with real API calls later
-const mockProfessionals = [
-  {
-    id: '1',
-    name: 'Chioma Okonkwo',
-    category: 'beautician' as const,
-    location: 'lekki' as const,
-    profile_image_url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop',
-    rating: 5,
-    review_count: 24,
-  },
-  {
-    id: '2',
-    name: 'Tunde Adeleke',
-    category: 'plumber' as const,
-    location: 'yaba' as const,
-    profile_image_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop',
-    rating: 4.5,
-    review_count: 18,
-  },
-  {
-    id: '3',
-    name: 'Zainab Hassan',
-    category: 'writer' as const,
-    location: 'ikeja' as const,
-    profile_image_url: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop',
-    rating: 5,
-    review_count: 32,
-  },
-  {
-    id: '4',
-    name: 'Kunle Oladele',
-    category: 'electrician' as const,
-    location: 'surulere' as const,
-    profile_image_url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop',
-    rating: 4.8,
-    review_count: 28,
-  },
-  {
-    id: '5',
-    name: 'Amara Nwosu',
-    category: 'tailor' as const,
-    location: 'VI' as const,
-    profile_image_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop',
-    rating: 4.9,
-    review_count: 41,
-  },
-  {
-    id: '6',
-    name: 'Samuel Okoro',
-    category: 'beautician' as const,
-    location: 'agege' as const,
-    profile_image_url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop',
-    rating: 4.7,
-    review_count: 15,
-  },
-];
+import { loadProfessionalCards } from '../utils/professionals';
+import type { ProfessionalCard as ProfessionalCardType } from '../types';
 
 export default function HomePage() {
+  const navigate = useNavigate();
+  const [professionals, setProfessionals] = useState<ProfessionalCardType[]>([]);
+
+  // Load professionals from localStorage on mount
+  useEffect(() => {
+    const allProfessionals = loadProfessionalCards();
+    // Show first 6 professionals, prioritizing newly created ones
+    setProfessionals(allProfessionals.slice(0, 6));
+  }, []);
+
   return (
     <div>
       {/* Hero Section */}
       <Hero />
 
-      {/* Categories Section */}
-      <section className="py-16 bg-secondary">
-        <div className="container-max">
-          <h2 className="text-h2 text-charcoal mb-8">Browse Categories</h2>
-          
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            {CATEGORY_LIST.map((category) => (
-              <div
-                key={category}
-                className="card-hover p-6 text-center"
-              >
-                <h3 className="font-semibold text-text-primary">
-                  {CATEGORIES[category]}
-                </h3>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Featured Professionals */}
-      <section className="py-16">
+      <section className="py-12 md:py-20">
         <div className="container-max">
-          <div className="flex justify-between items-center mb-8">
+          <div className="flex justify-between items-center mb-12">
             <h2 className="text-h2 text-charcoal">Featured Professionals</h2>
-            <Button variant="secondary">View All</Button>
+            <Button size="md" variant="secondary">View All</Button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {mockProfessionals.map((professional) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {professionals.map((professional) => (
               <ProfessionalCard
                 key={professional.id}
                 professional={professional}
@@ -107,14 +42,14 @@ export default function HomePage() {
       </section>
 
       {/* How It Works */}
-      <section className="py-16 bg-secondary">
+      <section className="py-12 md:py-20 bg-secondary">
         <div className="container-max">
           <h2 className="text-h2 text-charcoal mb-12 text-center">How It Works</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
-              <h3 className="font-semibold text-lg mb-2">Search</h3>
-              <p className="text-text-secondary">
+              <h3 className="font-semibold text-base sm:text-lg mb-3">Search</h3>
+              <p className="text-text-secondary text-sm sm:text-base">
                 Browse professionals by category and location to find the perfect match for your needs.
               </p>
             </div>
@@ -137,18 +72,26 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-charcoal text-white">
+      <section className="py-12 md:py-20 bg-charcoal text-white">
         <div className="container-max text-center">
-          <h2 className="text-h2 text-white mb-4">Ready to Get Started?</h2>
-          <p className="text-lg mb-8 max-w-2xl mx-auto">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4 sm:mb-6">Ready to Get Started?</h2>
+          <p className="text-base sm:text-lg mb-10 sm:mb-12 max-w-2xl mx-auto text-gray-100">
             Join thousands of professionals already on Pro Pool or find the perfect professional for your next project.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button className="bg-electric-blue hover:bg-electric-blue-hover">
+            <Button 
+              size="md"
+              className="bg-electric-blue hover:bg-electric-blue-hover"
+              onClick={() => navigate('/signup')}
+            >
               Join as a Professional
             </Button>
-            <Button variant="secondary">
+            <Button 
+              size="md"
+              variant="secondary"
+              onClick={() => navigate('/search')}
+            >
               Hire a Professional
             </Button>
           </div>

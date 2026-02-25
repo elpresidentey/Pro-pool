@@ -14,6 +14,7 @@ export default function SignupPage() {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -23,6 +24,7 @@ export default function SignupPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setSuccess(false);
 
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
@@ -46,20 +48,28 @@ export default function SignupPage() {
       
       if (!result.success) {
         console.error('Signup error:', result.error);
-        setError(result.error || 'Signup failed');
+        
+        // Handle rate limit error with helpful message
+        if (result.error?.includes('rate limit') || result.error?.includes('too many')) {
+          setError('Too many signup attempts. Please wait a few minutes before trying again, or try with a different email address.');
+        } else if (result.error?.includes('already')) {
+          setError('This email is already registered. Try logging in instead.');
+        } else {
+          setError(result.error || 'Signup failed');
+        }
+        
         setLoading(false);
         return;
       }
-
-      console.log('Signup successful, redirecting...');
-      // Redirect based on role after a short delay
+      setSuccess(true);
+      // Redirect based on role after a short delay to show success message
       setTimeout(() => {
         if (formData.role === 'professional') {
           navigate('/setup-profile', { replace: true });
         } else {
           navigate('/', { replace: true });
         }
-      }, 500);
+      }, 600);
     } catch (err) {
       console.error('Sign up error:', err);
       setError(err instanceof Error ? err.message : 'Signup failed. Please try again.');
@@ -68,16 +78,29 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-secondary py-12 px-4">
-      <div className="w-full max-w-md bg-white rounded-card shadow-card p-8">
-        <h1 className="text-h2 text-charcoal mb-2 text-center">Join Pro Pool</h1>
-        <p className="text-text-secondary text-center mb-8">
+    <div className="min-h-screen flex items-center justify-center bg-secondary py-16 px-4">
+      <div className="w-full max-w-md bg-white rounded-card shadow-card p-10">
+        <h1 className="text-h2 text-charcoal mb-3 text-center">Join Pro Pool</h1>
+        <p className="text-text-secondary text-center mb-10">
           Create your account in a few minutes
         </p>
 
+        {success && (
+          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+            <div className="flex items-center gap-3 mb-2">
+              <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              <span className="font-semibold text-green-700">Account Created! Check Your Email</span>
+            </div>
+            <p className="text-sm text-green-700 ml-8">
+              We've sent a confirmation email to <strong>{formData.email}</strong>. Click the link in the email to verify your account. If you don't see it, check your spam folder.
+            </p>
+          </div>
+        )}
         {error && <ErrorMessage error={error} />}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label className="block text-sm font-medium text-text-primary mb-2">
               Email
@@ -159,6 +182,7 @@ export default function SignupPage() {
 
           <Button
             type="submit"
+            size="md"
             disabled={loading}
             className="w-full"
           >

@@ -34,6 +34,9 @@ export default {
         'primary': '#FFFFFF',
         'secondary': '#F4F6F8',
       },
+      padding: {
+        'hero': '60px',
+      },
     },
   },
   plugins: [],

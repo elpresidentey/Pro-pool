@@ -186,10 +186,10 @@ export default function DashboardPage() {
   if (!user) return null;
 
   return (
-    <div className="bg-gray-50 min-h-screen py-8">
+    <div className="bg-gray-50 min-h-screen py-12 md:py-16">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex justify-between items-center mb-12">
           <h1 className="text-3xl font-bold text-gray-900">My Dashboard</h1>
           <Button onClick={handleLogout} variant="secondary">
             Logout
@@ -318,9 +318,9 @@ export default function DashboardPage() {
                     disabled={!isEditing}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg disabled:bg-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   >
-                    {Object.values(CATEGORIES).map((cat, idx) => (
-                      <option key={idx} value={cat}>
-                        {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                    {Object.entries(CATEGORIES).map(([key, value]) => (
+                      <option key={key} value={key}>
+                        {value}
                       </option>
                     ))}
                   </select>
@@ -338,9 +338,9 @@ export default function DashboardPage() {
                     disabled={!isEditing}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg disabled:bg-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   >
-                    {Object.values(LOCATIONS).map((loc, idx) => (
-                      <option key={idx} value={loc}>
-                        {loc}
+                    {Object.entries(LOCATIONS).map(([key, value]) => (
+                      <option key={key} value={key}>
+                        {value}
                       </option>
                     ))}
                   </select>
